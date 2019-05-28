@@ -1,4 +1,4 @@
-# macos_gatekeeper_bypass
+# macos_gatekeeper_bypass (*article backup)
  bypass Gatekeeper in order to execute untrusted code without any warning or user's explicit permission.
 sources: https://www.fcvl.net/vulnerabilities/macosx-gatekeeper-bypass
 https://www.sentinelone.com/blog/how-malware-bypass-macos-gatekeeper/
